@@ -71,49 +71,49 @@ const products = [
         id: 1,
         name: "T-shirt with Tape Details",
         price: 120,
-        image: "/src/assets/image 7-Photoroom.png"
+        image: "../assets/image 7-Photoroom.png"
     },
     {
         id: 2,
         name: "Skinny Fit Jeans",
         price: 240,
-        image: "/src/assets/image 8-Photoroom.png"
+        image: "../assets/image 8-Photoroom.png"
     },
     {
         id: 3,
         name: "Checkered Shirt",
         price: 180,
-        image: "/src/assets/image 9-Photoroom.png"
+        image: "../assets/image 9-Photoroom.png"
     },
     {
         id: 4,
         name: "Sleeve Striped T-Shirt",
         price: 130,
-        image: "/src/assets/image 10-Photoroom.png"
+        image: "../assets/image 10-Photoroom.png"
     },
     {
         id: 5,
         name: "Vertical Striped Shirt",
         price: 212,
-        image: "/src/assets/image 7 (1)-Photoroom.png"
+        image: "../assets/image 7 (1)-Photoroom.png"
     },
     {
         id: 6,
         name: "Courage Graphic T-Shirt",
         price: 145,
-        image: "/src/assets/image 8 (1)-Photoroom.png"
+        image: "../assets/image 8 (1)-Photoroom.png"
     },
     {
         id: 7,
         name: "Loose Fit Bermuda Shorts",
         price: 80,
-        image: "/src/assets/image 9 (1)-Photoroom.png"
+        image: "../assets/image 9 (1)-Photoroom.png"
     },
     {
         id: 8,
         name: "Faded Skinny Jeans",
         price: 210,
-        image: "/src/assets/image 10 (1)-Photoroom.png"
+        image: "../assets/image 10 (1)-Photoroom.png"
     }
 ];
 
@@ -199,22 +199,18 @@ updateCartCount();
 
 
 // DISPLAY CART ITEMS
-const cartItemsContainer =
-    document.getElementById("cart-items");
-
+const cartItemsContainer = document.getElementById("cart-items");
 
 // CART SUMMARY ELEMENTS
-const cartSubtotal =
-    document.getElementById("cart-subtotal");
+const cartSubtotal = document.getElementById("cart-subtotal");
 
-const cartDiscount =
-    document.getElementById("cart-discount");
+const cartDiscount = document.getElementById("cart-discount");
 
-const deliveryFeeElement =
-    document.getElementById("delivery-fee");
+const deliveryFeeElement = document.getElementById("delivery-fee");
 
-const cartTotal =
-    document.getElementById("cart-total");
+const cartTax = document.getElementById("cart-tax");
+
+const cartTotal = document.getElementById("cart-total");
 
 
 // DISPLAY CART ITEMS
@@ -235,9 +231,7 @@ function displayCartItems() {
                 <p class="text-gray-500">
                     Your Cart is empty.
                 </p>
-                <a
-                    href="./index.html"
-                    class="mt-4 inline-flex min-w-48 items-center justify-center rounded-full bg-black px-8 py-3 text-sm font-medium text-white">
+                <a href="./index.html"class="mt-4 inline-flex min-w-48 items-center justify-center rounded-full bg-black px-8 py-3 text-sm font-medium text-white">
                     Continue Shopping
                 </a>
             </div>
@@ -246,6 +240,20 @@ function displayCartItems() {
         // Update summary even when cart is empty
         updateCartSummary();
         return;
+    }
+
+    const clearCartButtoon = document.getElementById("clear-cart-button");
+
+    if (clearCartButtoon) {
+        clearCartButtoon.addEventListener("click", function () {
+            cart = [];
+
+            localStorage.setItem("cart", JSON.stringify(cart));
+
+            displayCartItems();
+            updateCartCount();
+            updateCartSummary();
+        });
     }
 
     // Display every product in the cart
@@ -259,10 +267,7 @@ function displayCartItems() {
 
             <!-- Product -->
             <div class="flex items-center gap-4">
-                <img
-                    src="${item.image}"
-                    alt="${item.name}"
-                    class="h-24 w-24 rounded-xl bg-gray-100 object-cover">
+                <img src="${item.image}"alt="${item.name}"class="h-24 w-24 rounded-xl bg-gray-100 object-cover">
                 <div>
                     <h2 class="font-semibold">
                         ${item.name}
@@ -275,21 +280,13 @@ function displayCartItems() {
 
             <!-- Quantity -->
             <div class="flex items-center gap-3">
-                <button
-                    type="button"
-                    class="decrease-quantity rounded-full border border-gray-200 px-4 py-2 text-lg"
-                    data-product-id="${item.id}">
+                <button type="button"class="decrease-quantity rounded-full border border-gray-200 px-4 py-2 text-lg"data-product-id="${item.id}">
                     -
                 </button>
-
                 <span class="min-w-6 text-center font-medium">
                     ${item.quantity}
                 </span>
-
-                <button
-                    type="button"
-                    class="increase-quantity rounded-full border border-gray-200 px-4 py-2 text-lg"
-                    data-product-id="${item.id}">
+                <button type="button"class="increase-quantity rounded-full border border-gray-200 px-4 py-2 text-lg"data-product-id="${item.id}">
                     +
                 </button>
             </div>
@@ -300,10 +297,7 @@ function displayCartItems() {
             </p>
 
             <!-- Remove -->
-            <button
-                type="button"
-                class="remove-from-cart text-sm text-red-500 hover:underline"
-                data-product-id="${item.id}">
+            <button type="button"class="remove-from-cart w-[110px] shrink-0 whitespace-nowrap text-center text-sm text-red-500 hover:underline"data-product-id="${item.id}">
                 Remove
             </button>
         `;
@@ -330,8 +324,7 @@ function updateCartSummary() {
     // Calculate subtotal
     const subtotal = cart.reduce(
         function (total, item) {
-            return total +
-                (item.price * item.quantity);
+            return total + (item.price * item.quantity);
         },
         0
     );
@@ -342,37 +335,31 @@ function updateCartSummary() {
     const discount = 0;
 
     // Delivery fee
-    const deliveryFee =
-        cart.length > 0 ? 15 : 0;
+    const deliveryFee = cart.length > 0 ? 15 : 0;
+
+    // Tax
+    // Tax is 10% of the subtotal.
+    const tax = subtotal * 0.10;
 
     // Calculate final total
-    const total =
-        subtotal - discount + deliveryFee;
+    const total = subtotal - discount + deliveryFee + tax;
 
     // Display values
-    cartSubtotal.textContent =
-        `$${subtotal}`;
-
-    cartDiscount.textContent =
-        `-$${discount}`;
-
-    deliveryFeeElement.textContent =
-        `$${deliveryFee}`;
-
-    cartTotal.textContent =
-        `$${total}`;
+    cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+    cartDiscount.textContent = `-$${discount.toFixed(2)}`;
+    deliveryFeeElement.textContent = `$${deliveryFee.toFixed(2)}`;
+    cartTax.textContent = `$${tax.toFixed(2)}`;
+    cartTotal.textContent = `$${total.toFixed(2)}`;
 }
+
 
 // QUANTITY + / - AND REMOVE BUTTONS
 function addQuantityEvents() {
-    const increaseButtons =
-        document.querySelectorAll(".increase-quantity");
+    const increaseButtons = document.querySelectorAll(".increase-quantity");
 
-    const decreaseButtons =
-        document.querySelectorAll(".decrease-quantity");
+    const decreaseButtons = document.querySelectorAll(".decrease-quantity");
 
-    const removeButtons =
-        document.querySelectorAll(".remove-from-cart");
+    const removeButtons = document.querySelectorAll(".remove-from-cart");
 
     // INCREASE QUANTITY
     increaseButtons.forEach(function (button) {
@@ -392,10 +379,7 @@ function addQuantityEvents() {
             }
 
             // Save cart
-            localStorage.setItem(
-                "cart",
-                JSON.stringify(cart)
-            );
+            localStorage.setItem("cart",JSON.stringify(cart));
 
             // Update badge
             updateCartCount();
@@ -433,10 +417,7 @@ function addQuantityEvents() {
             }
 
             // Save cart
-            localStorage.setItem(
-                "cart",
-                JSON.stringify(cart)
-            );
+            localStorage.setItem("cart", JSON.stringify(cart));
 
             // Update badge
             updateCartCount();
@@ -461,10 +442,7 @@ function addQuantityEvents() {
             );
 
             // Save cart
-            localStorage.setItem(
-                "cart",
-                JSON.stringify(cart)
-            );
+            localStorage.setItem("cart", JSON.stringify(cart));
 
             // Update badge
             updateCartCount();
@@ -499,6 +477,3 @@ if (checkoutButton) {
 
 // DISPLAY CART WHEN PAGE LOADS
 displayCartItems();
-
-
-
